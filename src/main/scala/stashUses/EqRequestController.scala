@@ -9,14 +9,14 @@ import scala.concurrent.duration._
 /**
   * Created by Ilya Volynin on 17.08.2018 at 21:27.
   *
-  * The idea of an actor is that equal events should be processed sequentialy,
+  * The idea of an actor is that equal events should be processed sequentially,
   * while different ones may be processed in parallel
   *
   * Thus we use set of currently processed objects (processingRequestsSet) to prevent duplicate objects
   * from concurrent processing with existing ones
   *
   * In case the duplicate object comes into the process, we stash it, waiting while the processing of its sibling is done
-  * Unstash is being caled periodically
+  * Un stash is being called periodically
   *
   */
 class EqRequestController(system: ActorSystem) extends Actor with ActorLogging with Stash {
@@ -57,8 +57,10 @@ class EqRequestController(system: ActorSystem) extends Actor with ActorLogging w
     Processed(value)
   }
 }
+
 object EqRequestController {
   def props(system: ActorSystem): Props = Props(new EqRequestController(system))
+
   case class Request(value: Int, mark: String)
   case class RemoveFromProcessingRequestsSet(value: Int)
   case object UnstashTask
